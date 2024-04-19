@@ -6,14 +6,19 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
 import GlobalStyle from './styles/global';
 import theme from './styles/theme';
-import Login from './pages/Login';
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Login />,
+  },
+  {
+    path: "/dashboard",
+    element: <Dashboard />,
   },
 ]);
 

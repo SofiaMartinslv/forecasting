@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from 'styled-components'
 
 const GlobalStyle = createGlobalStyle`
   html, body, div, span, applet, object, iframe,
@@ -28,6 +28,7 @@ const GlobalStyle = createGlobalStyle`
   }
   body {
     line-height: 1;
+    font-family: "Inter";
   }
   ol, ul {
     list-style: none;
