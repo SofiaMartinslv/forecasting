@@ -1,8 +1,12 @@
 const theme = {
     colors: {
-        gray100: '#F4F4F4',
-        blue100: '#007bff',
-        blue200: '#0056b3'
+        gray100: '#f9f9f9',
+        gray200: '#e9e9e9',
+        gray300: '#CECECE',
+        gray500: '#949494',
+        blue300: '#2181c4',
+        blue400: '#01234a',
+        black: '#09090b'
     }
 }
 

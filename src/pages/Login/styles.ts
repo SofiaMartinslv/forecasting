@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import background from '../../assets/background.jpg'
 
 export const Container = styled.div`
-  background: rgba(0, 24, 156, 1);
+  background: ${({ theme }) => theme.colors.blue300};
   background-image: url(${background});
   background-size: cover;
   display: flex;
@@ -65,7 +65,7 @@ export const Button = styled.button`
   width: 100%;
   padding: 16px;
   border-radius: 8px;
-  background-color: ${({ theme }) => theme.colors.blue100};
+  background-color: ${({ theme }) => theme.colors.blue400};
   color: white;
   font-weight: bold;
   border: none;
@@ -73,6 +73,6 @@ export const Button = styled.button`
   cursor: pointer;
 
   &:hover {
-    background-color: ${({ theme }) => theme.colors.blue200};
+    background-color: ${({ theme }) => theme.colors.blue300};
   }
 `
