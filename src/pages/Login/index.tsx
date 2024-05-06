@@ -24,18 +24,18 @@ function Login() {
         <h1>Login</h1>
         <input
           type="text"
-          placeholder="Username"
+          placeholder="Usuário"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
         <input
           type="password"
-          placeholder="Password"
+          placeholder="Senha"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
         <S.Button onClick={handleLogin}>Login</S.Button>
-        <p>Não tem uma conta? <a>criar</a></p>
+        <p>Não tem uma conta? <a onClick={() => navigate("/signup")}>criar</a></p>
       </S.LoginContainer>
     </S.Container>
   )

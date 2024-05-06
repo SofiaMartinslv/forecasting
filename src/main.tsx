@@ -6,8 +6,9 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import Login from './pages/Login';
+import SignUp from './pages/SignUp';
 import GlobalStyle from './styles/global';
 import theme from './styles/theme';
 
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: <Dashboard />,
+  },
+  {
+    path: "/signup",
+    element: <SignUp />,
   },
 ]);
 
