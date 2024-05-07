@@ -1,18 +1,20 @@
 import {
+  Area,
   CartesianGrid,
+  ComposedChart,
   Legend,
   Line,
-  LineChart,
   Tooltip,
   XAxis,
   YAxis
 } from 'recharts'
 import { useEffect, useState } from 'react'
 import * as Popover from '@radix-ui/react-popover'
-import CalendarIcon from '@/assets/CalendarIcon'
 import { format } from 'date-fns'
-import ArrowIcon from '@/assets/ArrowIcon'
 import { DateRange } from 'react-day-picker'
+
+import ArrowIcon from '@/assets/ArrowIcon'
+import CalendarIcon from '@/assets/CalendarIcon'
 import theme from '@/styles/theme'
 import * as S from './styles'
 
@@ -33,46 +35,46 @@ function Dashboard() {
 
   const data = [
     {
-      name: 'Page A',
-      uv: 4000,
-      pv: 2400,
-      amt: 2400
+      date: 'Page A',
+      pressure: 9.5,
+      forecast: null,
+      confidenceInterval: [11, 8.5]
     },
     {
-      name: 'Page B',
-      uv: 3000,
-      pv: 1398,
-      amt: 2210
+      date: 'Page B',
+      pressure: 11,
+      forecast: null,
+      confidenceInterval: [12, 7.6]
     },
     {
-      name: 'Page C',
-      uv: 2000,
-      pv: 9800,
-      amt: 2290
+      date: 'Page C',
+      pressure: 15.1,
+      forecast: null,
+      confidenceInterval: [16, 14.1]
     },
     {
-      name: 'Page D',
-      uv: 2780,
-      pv: 3908,
-      amt: 2000
+      date: 'Page D',
+      pressure: 20,
+      forecast: null,
+      confidenceInterval: [18, 20]
     },
     {
-      name: 'Page E',
-      uv: 1890,
-      pv: 4800,
-      amt: 2181
+      date: 'Page E',
+      forecast: 25,
+      isForecast: true,
+      confidenceInterval: [16, 24]
     },
     {
-      name: 'Page F',
-      uv: 2390,
-      pv: 3800,
-      amt: 2500
+      date: 'Page F',
+      forecast: 20.5,
+      isForecast: true,
+      confidenceInterval: [18, 20]
     },
     {
-      name: 'Page G',
-      uv: 3490,
-      pv: 4300,
-      amt: 2100
+      date: 'Page G',
+      forecast: 15,
+      isForecast: true,
+      confidenceInterval: [18, 20]
     }
   ]
 
@@ -138,7 +140,7 @@ function Dashboard() {
         </S.Filters>
         <S.ChartContainer>
           <S.ResponsiveContainer>
-            <LineChart
+            <ComposedChart
               width={500}
               height={300}
               data={data}
@@ -150,18 +152,34 @@ function Dashboard() {
               }}
             >
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
+              <XAxis dataKey="date" />
               <YAxis />
               <Tooltip />
               <Legend />
               <Line
+                name="Name"
                 type="monotone"
-                dataKey="pv"
+                dataKey="pressure"
                 stroke="#8884d8"
                 activeDot={{ r: 8 }}
               />
-              <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
-            </LineChart>
+              {forecastingOn && (
+                <Line
+                  name="Forecasting"
+                  type="monotone"
+                  dataKey="forecast"
+                  stroke="#82ca9d"
+                  strokeDasharray="5 5"
+                />
+              )}
+              {confidenceIntervalOn && (
+                <Area
+                  dataKey="confidenceInterval"
+                  stroke="#5377b94b"
+                  fill="#5377b94b"
+                />
+              )}
+            </ComposedChart>
           </S.ResponsiveContainer>
         </S.ChartContainer>
       </S.Container>
