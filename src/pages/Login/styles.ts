@@ -20,10 +20,12 @@ export const LoginContainer = styled.div`
   -webkit-backdrop-filter: blur(9.3px);
   border-radius: 8px;
   padding: 40px 32px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
 
   h1 {
     margin: 10px 0;
