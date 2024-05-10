@@ -155,7 +155,7 @@ function Dashboard() {
             <LineChart width={500} height={300}>
               <CartesianGrid strokeDasharray="3 3" />
 
-              <XAxis dataKey="date" type="category" allowDuplicatedCategory={false} />
+              <XAxis dataKey="date" type="category" allowDuplicatedCategory={false} tickFormatter={(value:string) => format(value, 'dd/MM hh:mm')} />
               <YAxis dataKey="value" />
 
               <Tooltip />
