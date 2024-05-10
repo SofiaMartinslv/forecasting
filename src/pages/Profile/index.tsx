@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom'
 import { api } from '@/lib/axios'
 import Header from '@/components/Header'
 import * as S from './styles'
-import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { isAxiosError } from 'axios';
 
