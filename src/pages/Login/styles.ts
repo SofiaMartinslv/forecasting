@@ -1,5 +1,7 @@
 import styled from 'styled-components'
 import background from '../../assets/background.jpg'
+import * as Toast from '@radix-ui/react-toast'
+import * as Form from '@radix-ui/react-form'
 
 export const Container = styled.div`
   background: ${({ theme }) => theme.colors.blue300};
@@ -18,19 +20,19 @@ export const LoginContainer = styled.div`
   box-shadow: 0 4px 20px rgb(0 0 0 / 26%);
   backdrop-filter: blur(9.3px);
   -webkit-backdrop-filter: blur(9.3px);
-  border-radius: 8px;
-  padding: 40px 32px;
+  padding: 64px 45px;
+  color: white;
+
   form {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 16px;
+    gap: 8px;
   }
 
   h1 {
-    margin: 10px 0;
+    margin-bottom: 24px;
     font-size: 20px;
-    color: white;
     font-weight: bold;
   }
 
@@ -55,15 +57,28 @@ export const LoginContainer = styled.div`
   }
 
   a {
-      font-weight: bold;
-      cursor: pointer;
+    font-weight: bold;
+    cursor: pointer;
     &:hover {
       text-decoration: underline;
     }
   }
 `
 
+export const FormField = styled(Form.Field)`
+  div {
+    margin-top: 8px;
+    text-align: right;
+    font-size: 14px;
+  }
+`
+export const CreateUser = styled.p`
+  text-align: center;
+  margin-top: 16px;
+`
+
 export const Button = styled.button`
+  font-size: 16px;
   width: 100%;
   padding: 16px;
   border-radius: 8px;
@@ -72,9 +87,17 @@ export const Button = styled.button`
   font-weight: bold;
   border: none;
   border-radius: 5px;
+  font-size: 16px;
   cursor: pointer;
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.blue300};
+  }
+`
+
+export const ToastRoot = styled(Toast.Root)`
+  div:first-child {
+    color: red;
+    font-weight: bold;
   }
 `

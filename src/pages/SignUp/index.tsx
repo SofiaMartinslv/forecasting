@@ -1,15 +1,11 @@
-import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
+import * as Toast from '@radix-ui/react-toast'
+import * as Form from '@radix-ui/react-form'
 import * as S from './styles'
-
-type Credentials = {
-  name: string
-  email: string
-  password: string
-}
+import { useState } from 'react'
 
 const signUpFormSchema = z.object({
   name: z.string(),
@@ -22,18 +18,20 @@ const signUpFormSchema = z.object({
 type SignUpForm = z.infer<typeof signUpFormSchema>
 
 function SignUp() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors }
-  } = useForm<SignUpForm>()
+  const [successToast, setSuccessToast] = useState(false)
+  const [errorToast, setErrorToast] = useState(false)
+
+  const { register, handleSubmit } = useForm<SignUpForm>()
 
   const signup = useMutation({
-    mutationFn: (credentials: Credentials) => {
+    mutationFn: (credentials: SignUpForm) => {
       return axios.post('/users', credentials)
     },
     onSuccess: () => {
-      console.log('success :)')
+      setSuccessToast(true)
+    },
+    onError: () => {
+      setErrorToast(true)
     }
   })
 
@@ -41,8 +39,10 @@ function SignUp() {
     console.log(data)
     signup.mutate({
       name: data.name,
+      company: data.company,
       email: data.email,
-      password: data.password
+      password: data.password,
+      number: data.number
     })
   }
 
@@ -50,59 +50,123 @@ function SignUp() {
     <S.Background>
       <S.SignUpContainer>
         <h1>Cadastro</h1>
-        <form onSubmit={handleSubmit(handleSignUp)}>
-          <S.InputGroup>
-            <div>
-              <label htmlFor="user">Usuário</label>
+        <Form.Root onSubmit={handleSubmit(handleSignUp)}>
+          <S.FormField name="user">
+            <Form.Label>Nome*</Form.Label>
+            <Form.Control asChild>
               <input
-                id="user"
                 type="text"
-                placeholder="Usuário"
+                placeholder="Nome"
                 {...register('name')}
+                required
               />
+            </Form.Control>
+            <div>
+              <Form.Message match="valueMissing">
+                * Campo obrigatório
+              </Form.Message>
             </div>
-            <S.FlexGroup>
-              <div>
-                <label htmlFor="company">Empresa</label>
+          </S.FormField>
+
+          <S.FlexGroup>
+            <S.FormField name="company">
+              <Form.Label>Empresa*</Form.Label>
+              <Form.Control asChild>
                 <input
                   type="text"
-                  id="company"
                   placeholder="Empresa"
                   {...register('company')}
+                  required
                 />
-              </div>
+              </Form.Control>
               <div>
-                <label htmlFor="number">Telefone</label>
+                <Form.Message match="valueMissing">
+                  * Campo obrigatório
+                </Form.Message>
+              </div>
+            </S.FormField>
+
+            <S.FormField name="number">
+              <Form.Label>Número*</Form.Label>
+              <Form.Control asChild>
                 <input
                   type="number"
-                  id="number"
-                  placeholder="(XX) XXXX-XXXX"
+                  placeholder="(XX) XXXXX-XXXX"
                   {...register('number')}
+                  required
                 />
+              </Form.Control>
+              <div>
+                <Form.Message match="valueMissing">
+                  * Campo obrigatório
+                </Form.Message>
               </div>
-            </S.FlexGroup>
-            <div>
-              <label htmlFor="email">E-mail</label>
+            </S.FormField>
+          </S.FlexGroup>
+
+          <S.FormField name="email">
+            <Form.Label>Email*</Form.Label>
+            <Form.Control asChild>
               <input
                 type="email"
-                id="email"
-                placeholder="E-mail"
+                placeholder="Email"
                 {...register('email')}
+                required
               />
-            </div>
+            </Form.Control>
             <div>
-              <label htmlFor="password">Senha</label>
+              <Form.Message match="valueMissing">
+                * Campo obrigatório
+              </Form.Message>
+              <Form.Message className="FormMessage" match="typeMismatch">
+                Email inválido
+              </Form.Message>
+            </div>
+          </S.FormField>
+
+          <S.FormField name="password">
+            <Form.Label>Senha*</Form.Label>
+            <Form.Control asChild>
               <input
-                id="password"
                 type="password"
                 placeholder="Senha"
                 {...register('password')}
+                required
               />
+            </Form.Control>
+            <div>
+              <Form.Message match="valueMissing">
+                * Campo obrigatório
+              </Form.Message>
             </div>
+          </S.FormField>
+          <Form.Submit asChild>
             <S.Button type="submit">Cadastrar</S.Button>
-          </S.InputGroup>
-        </form>
+          </Form.Submit>
+        </Form.Root>
       </S.SignUpContainer>
+
+      <S.SuccessToastRoot
+        className="ToastRoot"
+        duration={3000}
+        open={successToast}
+        onOpenChange={setSuccessToast}
+      >
+        <Toast.Title>{':)'}</Toast.Title>
+        <Toast.Description>Usuário cadastrado com sucesso</Toast.Description>
+      </S.SuccessToastRoot>
+
+      <S.ErrorToastRoot
+        className="ToastRoot"
+        duration={3000}
+        open={errorToast}
+        onOpenChange={setErrorToast}
+      >
+        <Toast.Title>Ops!</Toast.Title>
+        <Toast.Description>Erro ao cadastrar usuário</Toast.Description>
+      </S.ErrorToastRoot>
+
+      <Toast.Viewport className="ToastViewport" />
     </S.Background>
   )
 }
