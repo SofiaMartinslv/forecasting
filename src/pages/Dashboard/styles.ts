@@ -14,18 +14,6 @@ export const Container = styled.div`
   }
 `
 
-export const Header = styled.header`
-  height: 50px;
-  display: flex;
-  align-items: center;
-  padding: 0 64px;
-  justify-content: space-between;
-  padding-left: 4rem;
-  font-weight: bold;
-  color: ${({ theme }) => theme.colors.gray100};
-  background-color: ${({ theme }) => theme.colors.blue400};
-`
-
 export const Title = styled.h1`
   font-size: 32px;
   font-weight: bold;
