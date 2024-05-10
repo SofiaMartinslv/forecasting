@@ -9,22 +9,90 @@ import {
   YAxis
 } from 'recharts'
 import { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import * as Popover from '@radix-ui/react-popover'
 import { format } from 'date-fns'
 import { DateRange } from 'react-day-picker'
+import { api } from '@/lib/axios'
 
 import ArrowIcon from '@/assets/ArrowIcon'
 import CalendarIcon from '@/assets/CalendarIcon'
 import UserIcon from '@/components/UserIcon/UserIcon'
 import theme from '@/styles/theme'
 import * as S from './styles'
+import { isAxiosError } from 'axios';
+import { useNavigate } from 'react-router-dom';
+
+interface Flow {
+  value: number
+  date: Date
+  confidenceInterval: number[]
+  isForecasting: boolean
+}
 
 function Dashboard() {
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const interceptorId = api.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (isAxiosError(error)) {
+          const message = error.response?.data?.message
+
+          if (message === 'Unauthorized.') {
+            navigate('/', { replace: true })
+          }
+        }
+      }
+    )
+
+    return () => {
+      api.interceptors.response.eject(interceptorId)
+    }
+  }, [navigate])
+
   const month = new Date()
+
   const [forecastingOn, setForecastingOn] = useState<boolean>(false)
-  const [confidenceIntervalOn, setConfidenceIntervalOn] =
-    useState<boolean>(false)
+  const [confidenceIntervalOn, setConfidenceIntervalOn] = useState<boolean>(false)
   const [range, setRange] = useState<DateRange | undefined>(undefined)
+
+  const { data: flowSeriesResult } = useQuery({
+    queryKey: ['flow', range],
+    queryFn: async () => {
+      const response = await api.get('/flow', {
+        params: {
+          range
+        }
+      })
+
+      const data = response.data
+      
+      const realFlow = data['flow'].filter(((item: Flow) => item.isForecasting === false))
+      const forecastData = data['flow'].filter((item: Flow) => item.isForecasting === true)
+      
+      const series = [
+        {
+          name: 'vazão real',
+          data: realFlow
+        },
+        {
+          name: 'vazão prevista',
+          data: forecastData
+        }
+      ]
+
+      return series
+    }
+  })
+
+  console.log(flowSeriesResult)
+
+
+  // if (flowResult) {
+  //   setForecastData(flowResult.flow.filter((item: Flow) => item.isForecasting))
+  // }
 
   const handleSetFilter = () => {
     console.log(range?.from, range?.to)
@@ -33,51 +101,6 @@ function Dashboard() {
   useEffect(() => {
     console.log('selected', range)
   }, [range])
-
-  const data = [
-    {
-      date: 'Page A',
-      pressure: 9.5,
-      forecast: null,
-      confidenceInterval: [11, 8.5]
-    },
-    {
-      date: 'Page B',
-      pressure: 11,
-      forecast: null,
-      confidenceInterval: [12, 7.6]
-    },
-    {
-      date: 'Page C',
-      pressure: 15.1,
-      forecast: null,
-      confidenceInterval: [16, 14.1]
-    },
-    {
-      date: 'Page D',
-      pressure: 20,
-      forecast: null,
-      confidenceInterval: [18, 20]
-    },
-    {
-      date: 'Page E',
-      forecast: 25,
-      isForecast: true,
-      confidenceInterval: [16, 24]
-    },
-    {
-      date: 'Page F',
-      forecast: 20.5,
-      isForecast: true,
-      confidenceInterval: [18, 20]
-    },
-    {
-      date: 'Page G',
-      forecast: 15,
-      isForecast: true,
-      confidenceInterval: [18, 20]
-    }
-  ]
 
   return (
     <>
@@ -144,7 +167,7 @@ function Dashboard() {
             <ComposedChart
               width={500}
               height={300}
-              data={data}
+              data={flowSeriesResult}
               margin={{
                 top: 5,
                 right: 30,
