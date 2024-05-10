@@ -86,10 +86,6 @@ function Dashboard() {
     }
   })
 
-  const handleSetFilter = () => {
-    console.log(range?.from, range?.to)
-  }
-
   useEffect(() => {
     console.log('selected', range)
   }, [range])
@@ -102,7 +98,7 @@ function Dashboard() {
         <hr />
         <S.Filters>
           <div>
-            <S.Toggle
+            {/* <S.Toggle
               active={forecastingOn}
               onClick={() => setForecastingOn(!forecastingOn)}
             >
@@ -113,7 +109,7 @@ function Dashboard() {
               onClick={() => setConfidenceIntervalOn(!confidenceIntervalOn)}
             >
               Intervalo de confiança
-            </S.Toggle>
+            </S.Toggle> */}
           </div>
           <div>
             <Popover.Root>
@@ -148,9 +144,9 @@ function Dashboard() {
             </Popover.Root>
             <S.FilterButton
               disabled={!range?.to || !range?.from}
-              onClick={handleSetFilter}
+              onClick={() => setRange()}
             >
-              Aplicar intervalo
+              Limpar Filtro
             </S.FilterButton>
           </div>
         </S.Filters>

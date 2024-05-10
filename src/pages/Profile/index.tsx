@@ -3,6 +3,9 @@ import { useQuery } from '@tanstack/react-query'
 import { api } from '@/lib/axios'
 import Header from '@/components/Header'
 import * as S from './styles'
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { isAxiosError } from 'axios';
 
 type UserData = {
   name: string
@@ -12,6 +15,27 @@ type UserData = {
 }
 
 const Profile = () => {
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const interceptorId = api.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (isAxiosError(error)) {
+          const message = error.response?.data?.message
+
+          if (message === 'Unauthorized.') {
+            navigate('/', { replace: true })
+          }
+        }
+      }
+    )
+
+    return () => {
+      api.interceptors.response.eject(interceptorId)
+    }
+  }, [navigate])
+
   const { data: user } = useQuery({
     queryKey: ['user'],
     queryFn: () => {
