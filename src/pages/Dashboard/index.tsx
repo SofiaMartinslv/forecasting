@@ -1,9 +1,8 @@
 import {
-  Area,
   CartesianGrid,
-  ComposedChart,
   Legend,
   Line,
+  LineChart,
   Tooltip,
   XAxis,
   YAxis
@@ -87,13 +86,6 @@ function Dashboard() {
     }
   })
 
-  console.log(flowSeriesResult)
-
-
-  // if (flowResult) {
-  //   setForecastData(flowResult.flow.filter((item: Flow) => item.isForecasting))
-  // }
-
   const handleSetFilter = () => {
     console.log(range?.from, range?.to)
   }
@@ -106,7 +98,7 @@ function Dashboard() {
     <>
       <Header />
       <S.Container>
-        <S.Title>Dashboard</S.Title>
+        <S.Title>Análise de Vazão com Previsão (Forecasting)</S.Title>
         <hr />
         <S.Filters>
           <div>
@@ -164,46 +156,27 @@ function Dashboard() {
         </S.Filters>
         <S.ChartContainer>
           <S.ResponsiveContainer>
-            <ComposedChart
-              width={500}
-              height={300}
-              data={flowSeriesResult}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5
-              }}
-            >
+            <LineChart width={500} height={300}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" />
-              <YAxis />
+
+              <XAxis dataKey="date" type="category" allowDuplicatedCategory={false} />
+              <YAxis dataKey="value" />
+
               <Tooltip />
               <Legend />
-              <Line
-                name="Name"
-                type="monotone"
-                dataKey="pressure"
-                stroke="#8884d8"
-                activeDot={{ r: 8 }}
-              />
-              {forecastingOn && (
+
+              {flowSeriesResult && flowSeriesResult.map((s) => (
                 <Line
-                  name="Forecasting"
-                  type="monotone"
-                  dataKey="forecast"
-                  stroke="#82ca9d"
-                  strokeDasharray="5 5"
+                  dot={false}
+                  dataKey="value"
+                  data={s.data}
+                  name={s.name}
+                  key={s.name}
+                  stroke={s.name === 'vazão prevista' ? '#29BF12' : '#3E92CC' }
+                  strokeDasharray={s.name === 'vazão prevista' ? '3 4 5 2' : ''}
                 />
-              )}
-              {confidenceIntervalOn && (
-                <Area
-                  dataKey="confidenceInterval"
-                  stroke="#5377b94b"
-                  fill="#5377b94b"
-                />
-              )}
-            </ComposedChart>
+              ))}
+            </LineChart>
           </S.ResponsiveContainer>
         </S.ChartContainer>
       </S.Container>

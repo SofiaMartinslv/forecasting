@@ -6,7 +6,7 @@ function Header({ background }: { background?: string }) {
   const navigate = useNavigate()
   return (
     <S.Header background={background}>
-      <a onClick={() => navigate('/dashboard')}>Forecasting :)</a>{' '}
+      <a onClick={() => navigate('/dashboard')}>galax.ia</a>{' '}
       <button onClick={() => navigate('/profile')}>
         <UserIcon color="white" />
       </button>
