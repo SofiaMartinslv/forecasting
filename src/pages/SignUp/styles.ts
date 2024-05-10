@@ -1,5 +1,7 @@
 import styled from 'styled-components'
 import background from '../../assets/background.jpg'
+import * as Form from '@radix-ui/react-form'
+import * as Toast from '@radix-ui/react-toast'
 
 export const Background = styled.div`
   background: ${({ theme }) => theme.colors.blue300};
@@ -18,7 +20,7 @@ export const SignUpContainer = styled.div`
   border-radius: 16px;
   box-shadow: 0 4px 20px rgb(0 0 0 / 26%);
   border-radius: 8px;
-  padding: 40px 32px;
+  padding: 64px 45px;
 
   h1 {
     margin: 10px 0;
@@ -47,34 +49,41 @@ export const SignUpContainer = styled.div`
     }
   }
 
-  label {
-      font-size: 12px;
-      line-height: 20px;
-  }
-
   a,
   p {
     color: white;
   }
 
   a {
-      font-weight: bold;
-      cursor: pointer;
+    font-weight: bold;
+    cursor: pointer;
     &:hover {
       text-decoration: underline;
     }
   }
 `
 
+export const FormField = styled(Form.Field)`
+  label {
+    font-size: 14px;
+    line-height: 28px;
+  }
+  div {
+    font-size: 12px;
+    margin: 8px 0;
+    text-align: right;
+  }
+`
+
 export const FlexGroup = styled.div`
-    display: flex;
-    gap: 8px;
+  display: flex;
+  gap: 8px;
 `
 
 export const InputGroup = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 `
 
 export const Button = styled.button`
@@ -86,9 +95,26 @@ export const Button = styled.button`
   font-weight: bold;
   border: none;
   border-radius: 5px;
+  font-size: 16px;
   cursor: pointer;
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.blue300};
+  }
+`
+
+export const ErrorToastRoot = styled(Toast.Root)`
+  border-left: 6px solid red;
+  div:first-child {
+    color: red;
+    font-weight: bold;
+  }
+`
+
+export const SuccessToastRoot = styled(Toast.Root)`
+  border-left: 6px solid green;
+  div:first-child {
+    color: green;
+    font-weight: bold;
   }
 `

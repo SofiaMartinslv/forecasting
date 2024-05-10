@@ -15,9 +15,9 @@ import { DateRange } from 'react-day-picker'
 
 import ArrowIcon from '@/assets/ArrowIcon'
 import CalendarIcon from '@/assets/CalendarIcon'
+import UserIcon from '@/components/UserIcon/UserIcon'
 import theme from '@/styles/theme'
 import * as S from './styles'
-import UserIcon from '@/components/UserIcon/UserIcon'
 
 function Dashboard() {
   const month = new Date()

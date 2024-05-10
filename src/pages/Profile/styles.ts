@@ -13,12 +13,10 @@ export const Background = styled.div`
 `;
 
 export const ProfileContainer = styled.div`
-  background: rgba(255, 255, 255, 0.07);
+  background: ${({ theme }) => theme.colors.gray100};
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.26);
-  backdrop-filter: blur(9.3px);
-  -webkit-backdrop-filter: blur(9.3px);
-  padding: 40px 32px;
+  padding: 64px 45px;
   display: flex;
   flex-direction: column;
 

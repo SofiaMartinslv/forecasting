@@ -1,83 +1,173 @@
+import { useMutation } from '@tanstack/react-query'
+import axios from 'axios'
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import * as Toast from '@radix-ui/react-toast'
+import * as Form from '@radix-ui/react-form'
+import { api } from '@/lib/axios'
 import { useState } from 'react'
 import * as S from './styles'
 
-function SignUp() {
-  const [username, setUsername] = useState('')
-  const [company, setCompany] = useState('')
-  const [number, setNumber] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+const signUpFormSchema = z.object({
+  name: z.string(),
+  company: z.string(),
+  number: z.number(),
+  email: z.string(),
+  password: z.string()
+})
 
-  const handleSignUp = () => {
-    console.log('cadastrado :)')
+type SignUpForm = z.infer<typeof signUpFormSchema>
+
+function SignUp() {
+  const [successToast, setSuccessToast] = useState(false)
+  const [errorToast, setErrorToast] = useState(false)
+
+  const { register, handleSubmit } = useForm<SignUpForm>()
+
+  const signup = useMutation({
+    mutationFn: (credentials: SignUpForm) => {
+      return api.post('/users', credentials)
+    },
+    onSuccess: () => {
+      setSuccessToast(true)
+    },
+    onError: () => {
+      setErrorToast(true)
+    }
+  })
+
+  const handleSignUp = (data: SignUpForm) => {
+    console.log(data)
+    signup.mutate({
+      name: data.name,
+      company: data.company,
+      email: data.email,
+      password: data.password,
+      number: data.number
+    })
   }
 
   return (
     <S.Background>
       <S.SignUpContainer>
         <h1>Cadastro</h1>
-        <S.InputGroup>
-          <div>
-            <label htmlFor="user">Usuário</label>
-            <input
-              id="user"
-              type="text"
-              placeholder="Usuário"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </div>
-          <S.FlexGroup>
-            <div>
-              <label htmlFor="company">Empresa</label>
+        <Form.Root onSubmit={handleSubmit(handleSignUp)}>
+          <S.FormField name="user">
+            <Form.Label>Nome*</Form.Label>
+            <Form.Control asChild>
               <input
                 type="text"
-                id="company"
-                placeholder="Empresa"
-                value={company}
-                onChange={(e) => setCompany(e.target.value)}
+                placeholder="Nome"
+                {...register('name')}
+                required
               />
-            </div>
+            </Form.Control>
             <div>
-              <label htmlFor="number">Telefone</label>
-              <input
-                type="number"
-                id="number"
-                placeholder="(XX) XXXX-XXXX"
-                value={number}
-                onChange={(e) => setNumber(e.target.value)}
-              />
+              <Form.Message match="valueMissing">
+                * Campo obrigatório
+              </Form.Message>
             </div>
+          </S.FormField>
+
+          <S.FlexGroup>
+            <S.FormField name="company">
+              <Form.Label>Empresa*</Form.Label>
+              <Form.Control asChild>
+                <input
+                  type="text"
+                  placeholder="Empresa"
+                  {...register('company')}
+                  required
+                />
+              </Form.Control>
+              <div>
+                <Form.Message match="valueMissing">
+                  * Campo obrigatório
+                </Form.Message>
+              </div>
+            </S.FormField>
+
+            <S.FormField name="number">
+              <Form.Label>Número*</Form.Label>
+              <Form.Control asChild>
+                <input
+                  type="number"
+                  placeholder="(XX) XXXXX-XXXX"
+                  {...register('number')}
+                  required
+                />
+              </Form.Control>
+              <div>
+                <Form.Message match="valueMissing">
+                  * Campo obrigatório
+                </Form.Message>
+              </div>
+            </S.FormField>
           </S.FlexGroup>
-          <div>
-            <label htmlFor="email">E-mail</label>
-            <input
-              type="email"
-              id="email"
-              placeholder="E-mail"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div>
-            <label htmlFor="password">Senha</label>
-            <input
-              id="password"
-              type="password"
-              placeholder="Senha"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <input
-            type="password"
-            placeholder="Confirme sua senha"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <S.Button onClick={handleSignUp}>Cadastrar</S.Button>
-        </S.InputGroup>
+
+          <S.FormField name="email">
+            <Form.Label>Email*</Form.Label>
+            <Form.Control asChild>
+              <input
+                type="email"
+                placeholder="Email"
+                {...register('email')}
+                required
+              />
+            </Form.Control>
+            <div>
+              <Form.Message match="valueMissing">
+                * Campo obrigatório
+              </Form.Message>
+              <Form.Message className="FormMessage" match="typeMismatch">
+                Email inválido
+              </Form.Message>
+            </div>
+          </S.FormField>
+
+          <S.FormField name="password">
+            <Form.Label>Senha*</Form.Label>
+            <Form.Control asChild>
+              <input
+                type="password"
+                placeholder="Senha"
+                {...register('password')}
+                required
+              />
+            </Form.Control>
+            <div>
+              <Form.Message match="valueMissing">
+                * Campo obrigatório
+              </Form.Message>
+            </div>
+          </S.FormField>
+          <Form.Submit asChild>
+            <S.Button type="submit">Cadastrar</S.Button>
+          </Form.Submit>
+        </Form.Root>
       </S.SignUpContainer>
+
+      <S.SuccessToastRoot
+        className="ToastRoot"
+        duration={3000}
+        open={successToast}
+        onOpenChange={setSuccessToast}
+      >
+        <Toast.Title>{':)'}</Toast.Title>
+        <Toast.Description>Usuário cadastrado com sucesso</Toast.Description>
+      </S.SuccessToastRoot>
+
+      <S.ErrorToastRoot
+        className="ToastRoot"
+        duration={3000}
+        open={errorToast}
+        onOpenChange={setErrorToast}
+      >
+        <Toast.Title>Ops!</Toast.Title>
+        <Toast.Description>Erro ao cadastrar usuário</Toast.Description>
+      </S.ErrorToastRoot>
+
+      <Toast.Viewport className="ToastViewport" />
     </S.Background>
   )
 }
