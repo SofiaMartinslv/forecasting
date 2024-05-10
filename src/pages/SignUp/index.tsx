@@ -4,8 +4,9 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import * as Toast from '@radix-ui/react-toast'
 import * as Form from '@radix-ui/react-form'
-import * as S from './styles'
+import { api } from '@/lib/axios'
 import { useState } from 'react'
+import * as S from './styles'
 
 const signUpFormSchema = z.object({
   name: z.string(),
@@ -25,7 +26,7 @@ function SignUp() {
 
   const signup = useMutation({
     mutationFn: (credentials: SignUpForm) => {
-      return axios.post('/users', credentials)
+      return api.post('/users', credentials)
     },
     onSuccess: () => {
       setSuccessToast(true)

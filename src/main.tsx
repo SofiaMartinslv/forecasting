@@ -5,11 +5,12 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { QueryClientProvider } from '@tanstack/react-query'
 import * as Toast from '@radix-ui/react-toast'
 
-import Dashboard from './pages/Dashboard'
-import Login from './pages/Login'
-import SignUp from './pages/SignUp'
-import GlobalStyle from './styles/global'
-import theme from './styles/theme'
+import Dashboard from './pages/Dashboard';
+import Login from './pages/Login';
+import SignUp from './pages/SignUp';
+import GlobalStyle from './styles/global';
+import theme from './styles/theme';
+import Profile from './pages/Profile'
 import { queryClient } from './lib/react-query'
 
 const router = createBrowserRouter([
@@ -22,10 +23,15 @@ const router = createBrowserRouter([
     element: <Dashboard />
   },
   {
-    path: '/signup',
-    element: <SignUp />
-  }
-])
+    path: "/signup",
+    element: <SignUp />,
+  },
+  {
+    path: "/profile",
+    element: <Profile />,
+  },
+]);
+
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

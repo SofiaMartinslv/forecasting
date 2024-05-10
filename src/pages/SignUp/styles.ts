@@ -20,7 +20,7 @@ export const SignUpContainer = styled.div`
   border-radius: 16px;
   box-shadow: 0 4px 20px rgb(0 0 0 / 26%);
   border-radius: 8px;
-  padding: 40px 32px;
+  padding: 64px 45px;
 
   h1 {
     margin: 10px 0;

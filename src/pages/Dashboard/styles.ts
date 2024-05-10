@@ -18,6 +18,8 @@ export const Header = styled.header`
   height: 50px;
   display: flex;
   align-items: center;
+  padding: 0 64px;
+  justify-content: space-between;
   padding-left: 4rem;
   font-weight: bold;
   color: ${({ theme }) => theme.colors.gray100};
