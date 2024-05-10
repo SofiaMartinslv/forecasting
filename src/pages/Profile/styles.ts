@@ -28,6 +28,21 @@ export const ProfileContainer = styled.div`
   }
 `
 
+export const ExitButton = styled.button`
+  padding: 8px 0;
+  font-weight: 700;
+  color: red;
+  border: 2px solid red;
+  border-radius: 4px;
+  background-color: transparent;
+
+  &:hover {
+    cursor: pointer;
+    color: ${({ theme }) => theme.colors.gray100};
+    background-color: red;
+  }
+`
+
 export const ProfileInfo = styled.div`
   div {
     display: flex;
