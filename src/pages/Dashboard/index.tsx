@@ -15,6 +15,7 @@ import { DateRange } from 'react-day-picker'
 
 import ArrowIcon from '@/assets/ArrowIcon'
 import CalendarIcon from '@/assets/CalendarIcon'
+import UserIcon from '@/components/UserIcon/UserIcon'
 import theme from '@/styles/theme'
 import * as S from './styles'
 
@@ -80,7 +81,7 @@ function Dashboard() {
 
   return (
     <>
-      <S.Header>Forecasting :)</S.Header>
+      <S.Header>Forecasting :) <UserIcon color='white'/></S.Header>
       <S.Container>
         <S.Title>Dashboard</S.Title>
         <hr />
