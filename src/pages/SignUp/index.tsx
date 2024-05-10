@@ -37,7 +37,6 @@ function SignUp() {
   })
 
   const handleSignUp = (data: SignUpForm) => {
-    console.log(data)
     signup.mutate({
       name: data.name,
       company: data.company,

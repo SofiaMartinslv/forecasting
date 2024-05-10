@@ -17,8 +17,8 @@ import { api } from '@/lib/axios'
 
 import ArrowIcon from '@/assets/ArrowIcon'
 import CalendarIcon from '@/assets/CalendarIcon'
-import UserIcon from '@/components/UserIcon/UserIcon'
 import theme from '@/styles/theme'
+import Header from '@/components/Header'
 import * as S from './styles'
 import { isAxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -104,7 +104,7 @@ function Dashboard() {
 
   return (
     <>
-      <S.Header>Forecasting :) <UserIcon color='white'/></S.Header>
+      <Header />
       <S.Container>
         <S.Title>Dashboard</S.Title>
         <hr />

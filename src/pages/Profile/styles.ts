@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import background from '../../assets/background.jpg';
+import styled from 'styled-components'
+import background from '../../assets/background.jpg'
 
 export const Background = styled.div`
   background: ${({ theme }) => theme.colors.blue300};
@@ -9,89 +9,52 @@ export const Background = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-`;
+  height: calc(100vh - 50px);
+`
 
 export const ProfileContainer = styled.div`
+  box-sizing: border-box;
   background: ${({ theme }) => theme.colors.gray100};
+  width: 500px;
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.26);
   padding: 64px 45px;
   display: flex;
   flex-direction: column;
-
   gap: 16px;
 
-  h1 {
-    margin: 10px 0;
-    font-size: 24px;
-    color: ${({ theme }) => theme.colors.black};
-    font-weight: bold;
+  svg {
+    margin: auto;
   }
-
-  input {
-    padding: 16px;
-    width: 300px;
-    border-radius: 8px;
-    border: 1px solid ${({ theme }) => theme.colors.gray500};
-    color: ${({ theme }) => theme.colors.black};
-    background-color: ${({ theme }) => theme.colors.gray100};
-    &:focus {
-      outline: none;
-    }
-    &::placeholder {
-      color: ${({ theme }) => theme.colors.gray300};
-    }
-  }
-
-  a,
-  p {
-    color: ${({ theme }) => theme.colors.black};
-  }
-
-  a {
-    font-weight: bold;
-    cursor: pointer;
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-`;
-
-export const ProfileTag = styled.div`
-  background-color: ${({ theme }) => theme.colors.blue400};
-  color: white;
-  font-weight: bold;
-  padding: 10px 20px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  text-align: center;
-`;
+`
 
 export const ProfileInfo = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-`;
+  div {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border-radius: 4px;
+    &:nth-child(odd) {
+      background-color: ${({ theme }) => theme.colors.gray200};
+    }
+  }
+`
 export const ProfileLabel = styled.span`
   font-weight: bold;
-  margin-right: 10px; /* Added margin-right */
-  color: ${({ theme }) => theme.colors.gray500}; /* Changed color to light gray */
-`;
-
+  margin-right: 10px;
+  color: ${({ theme }) => theme.colors.gray500};
+`
 
 export const ProfileValue = styled.span`
-  color: ${({ theme }) => theme.colors.gray300}; 
-  border-radius: 8px; 
-  padding: 5px 10px; 
- 
-`;
+  color: ${({ theme }) => theme.colors.gray500};
+  border-radius: 8px;
+  padding: 5px 10px;
+`
 
 export const ProfileName = styled.h1`
-  color: ${({ theme }) => theme.colors.black}; 
-  margin-top: 40px;
+  color: ${({ theme }) => theme.colors.black};
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 20px;
   text-align: center;
-`;
+`
