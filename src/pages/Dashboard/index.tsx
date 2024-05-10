@@ -17,6 +17,7 @@ import ArrowIcon from '@/assets/ArrowIcon'
 import CalendarIcon from '@/assets/CalendarIcon'
 import theme from '@/styles/theme'
 import * as S from './styles'
+import UserIcon from '@/components/UserIcon/UserIcon'
 
 function Dashboard() {
   const month = new Date()
@@ -80,7 +81,7 @@ function Dashboard() {
 
   return (
     <>
-      <S.Header>Forecasting :)</S.Header>
+      <S.Header>Forecasting :) <UserIcon color='white'/></S.Header>
       <S.Container>
         <S.Title>Dashboard</S.Title>
         <hr />

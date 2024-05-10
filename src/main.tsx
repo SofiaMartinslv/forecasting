@@ -11,6 +11,7 @@ import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import GlobalStyle from './styles/global';
 import theme from './styles/theme';
+import Profile from './pages/Profile'
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
   {
     path: "/signup",
     element: <SignUp />,
+  },
+  {
+    path: "/profile",
+    element: <Profile />,
   },
 ]);
 
