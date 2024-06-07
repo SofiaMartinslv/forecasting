@@ -19,8 +19,9 @@ import CalendarIcon from '@/assets/CalendarIcon'
 import theme from '@/styles/theme'
 import Header from '@/components/Header'
 import * as S from './styles'
-import { isAxiosError } from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { isAxiosError } from 'axios'
+import { useNavigate } from 'react-router-dom'
+import CloseIcon from '@/assets/CloseIcon'
 
 interface Flow {
   value: number
@@ -54,7 +55,8 @@ function Dashboard() {
   const month = new Date()
 
   const [forecastingOn, setForecastingOn] = useState<boolean>(false)
-  const [confidenceIntervalOn, setConfidenceIntervalOn] = useState<boolean>(false)
+  const [confidenceIntervalOn, setConfidenceIntervalOn] =
+    useState<boolean>(false)
   const [range, setRange] = useState<DateRange | undefined>(undefined)
 
   const { data: flowSeriesResult } = useQuery({
@@ -67,10 +69,14 @@ function Dashboard() {
       })
 
       const data = response.data
-      
-      const realFlow = data['flow'].filter(((item: Flow) => item.isForecasting === false))
-      const forecastData = data['flow'].filter((item: Flow) => item.isForecasting === true)
-      
+
+      const realFlow = data['flow'].filter(
+        (item: Flow) => item.isForecasting === false
+      )
+      const forecastData = data['flow'].filter(
+        (item: Flow) => item.isForecasting === true
+      )
+
       const series = [
         {
           name: 'vazão real',
@@ -96,9 +102,27 @@ function Dashboard() {
       <S.Container>
         <S.Title>Análise de Vazão com Previsão (Forecasting)</S.Title>
         <hr />
-        <S.Filters>
+        <S.Indicators>
           <div>
-            {/* <S.Toggle
+            <b>Indicador 1</b>
+            <S.CardContent>2342</S.CardContent>
+            <S.CardFooter>abc</S.CardFooter>
+          </div>
+          <div>
+            <b>Indicador 2</b>
+            <S.CardContent>1243</S.CardContent>
+            <S.CardFooter>abc</S.CardFooter>
+          </div>
+          <div>
+            <b>Indicador 3</b>
+            <S.CardContent>423</S.CardContent>
+            <S.CardFooter>abc</S.CardFooter>
+          </div>
+        </S.Indicators>
+        <S.ChartContainer>
+        <S.Filters>
+          {/* <div>
+            <S.Toggle
               active={forecastingOn}
               onClick={() => setForecastingOn(!forecastingOn)}
             >
@@ -109,8 +133,8 @@ function Dashboard() {
               onClick={() => setConfidenceIntervalOn(!confidenceIntervalOn)}
             >
               Intervalo de confiança
-            </S.Toggle> */}
-          </div>
+            </S.Toggle>
+          </div> */}
           <div>
             <Popover.Root>
               <S.CalendarPopoverTrigger>
@@ -125,9 +149,13 @@ function Dashboard() {
                   </>
                 )}
                 {range?.to && <div>{format(range.to, 'dd/MM/yyyy')}</div>}
-                <CalendarIcon
-                  fill={!!range?.from ? theme.colors.black : 'currentColor'}
-                />
+                {!range?.to || !range?.from ? (
+                  <CalendarIcon />
+                ) : (
+                  <S.FilterButton onClick={() => setRange()}>
+                    <CloseIcon />
+                  </S.FilterButton>
+                )}
               </S.CalendarPopoverTrigger>
               <Popover.Portal>
                 <S.CalendarPopoverContent>
@@ -142,36 +170,37 @@ function Dashboard() {
                 </S.CalendarPopoverContent>
               </Popover.Portal>
             </Popover.Root>
-            <S.FilterButton
-              disabled={!range?.to || !range?.from}
-              onClick={() => setRange()}
-            >
-              Limpar Filtro
-            </S.FilterButton>
           </div>
         </S.Filters>
-        <S.ChartContainer>
           <S.ResponsiveContainer>
             <LineChart width={500} height={300}>
               <CartesianGrid strokeDasharray="3 3" />
 
-              <XAxis dataKey="date" type="category" allowDuplicatedCategory={false} tickFormatter={(value:string) => format(value, 'dd/MM hh:mm')} />
+              <XAxis
+                dataKey="date"
+                type="category"
+                allowDuplicatedCategory={false}
+                tickFormatter={(value: string) => format(value, 'dd/MM hh:mm')}
+              />
               <YAxis dataKey="value" />
 
               <Tooltip />
               <Legend />
 
-              {flowSeriesResult && flowSeriesResult.map((s) => (
-                <Line
-                  dot={false}
-                  dataKey="value"
-                  data={s.data}
-                  name={s.name}
-                  key={s.name}
-                  stroke={s.name === 'vazão prevista' ? '#29BF12' : '#3E92CC' }
-                  strokeDasharray={s.name === 'vazão prevista' ? '3 4 5 2' : ''}
-                />
-              ))}
+              {flowSeriesResult &&
+                flowSeriesResult.map((s) => (
+                  <Line
+                    dot={false}
+                    dataKey="value"
+                    data={s.data}
+                    name={s.name}
+                    key={s.name}
+                    stroke={s.name === 'vazão prevista' ? '#29BF12' : '#3E92CC'}
+                    strokeDasharray={
+                      s.name === 'vazão prevista' ? '3 4 5 2' : ''
+                    }
+                  />
+                ))}
             </LineChart>
           </S.ResponsiveContainer>
         </S.ChartContainer>

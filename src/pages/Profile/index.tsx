@@ -3,9 +3,9 @@ import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { api } from '@/lib/axios'
 import Header from '@/components/Header'
-import * as S from './styles'
 import { useEffect } from 'react';
 import { isAxiosError } from 'axios';
+import * as S from './styles'
 
 type UserData = {
   name: string

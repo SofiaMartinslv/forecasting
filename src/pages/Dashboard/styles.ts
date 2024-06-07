@@ -4,9 +4,8 @@ import { DayPicker } from 'react-day-picker'
 import * as Popover from '@radix-ui/react-popover'
 
 export const Container = styled.div`
-  background-color: ${({ theme }) => theme.colors.gray100};
   height: 100vh;
-  padding: 4rem;
+  padding: 2rem 4rem;
 
   hr {
     width: 100%;
@@ -15,9 +14,40 @@ export const Container = styled.div`
 `
 
 export const Title = styled.h1`
-  font-size: 32px;
+  font-size: 20px;
   font-weight: bold;
   color: ${({ theme }) => theme.colors.black};
+`
+
+export const Indicators = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  gap: 16px;
+  div {
+    box-shadow: 0 0 2px rgb(0 0 0 / 16%);
+    flex: 1;
+    height: 112px;
+    padding: 16px;
+    border: 1px solid ${({ theme }) => theme.colors.gray300};
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    &:hover {
+      box-shadow: 0 0 4px rgb(0 0 0 / 16%);
+      cursor: pointer;
+    }
+  }
+`
+
+export const CardContent = styled.p`
+  text-align: center;
+`
+
+export const CardFooter = styled.p`
+  text-align: right;
+  color: ${({ theme }) => theme.colors.gray500};
 `
 
 export const Filters = styled.div`
@@ -34,8 +64,9 @@ export const Filters = styled.div`
 `
 
 export const CalendarPopoverTrigger = styled(Popover.Trigger)`
-  transition: background-color .5s;
-  width: 210px;
+  transition: background-color 0.5s;
+  height: 33px;
+  width: 223px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -47,11 +78,13 @@ export const CalendarPopoverTrigger = styled(Popover.Trigger)`
   cursor: pointer;
   &:hover {
     background-color: ${({ theme }) => theme.colors.gray200};
-    p, svg {
-      color:  ${({ theme }) => theme.colors.black};
+    p,
+    svg {
+      color: ${({ theme }) => theme.colors.black};
     }
   }
-  p, svg {
+  p,
+  svg {
     color: ${({ theme }) => theme.colors.gray500};
   }
 `
@@ -73,7 +106,7 @@ export const DatePicker = styled(DayPicker)`
   .rdp-caption_start .rdp-caption {
     flex-direction: row-reverse;
   }
-  
+
   .rdp-head {
     font-size: 12px;
     color: ${({ theme }) => theme.colors.gray500};
@@ -82,8 +115,7 @@ export const DatePicker = styled(DayPicker)`
 
   table {
     border-spacing: 0 4px;
-    border-collapse: separate; 
-
+    border-collapse: separate;
   }
 
   .rdp-caption {
@@ -94,7 +126,7 @@ export const DatePicker = styled(DayPicker)`
     align-items: center;
     justify-content: flex-end;
     gap: 64px;
-    
+
     button {
       display: inline-flex;
       align-items: center;
@@ -108,15 +140,15 @@ export const DatePicker = styled(DayPicker)`
         color: ${({ theme }) => theme.colors.gray500};
         width: 10px;
       }
-      
+
       &:hover {
         box-shadow: 0 0 4px rgb(0 0 0 / 16%);
       }
-    }    
+    }
   }
 
   button {
-    padding: .4em .6em;
+    padding: 0.4em 0.6em;
     background-color: white;
     border-radius: 4px;
   }
@@ -127,13 +159,13 @@ export const DatePicker = styled(DayPicker)`
       border: none;
       padding: 8px;
       &:hover :not(.rdp-day_selected) {
-          background-color: ${({ theme }) => theme.colors.gray200};
-        }
+        background-color: ${({ theme }) => theme.colors.gray200};
+      }
     }
   }
 
   .rdp-day_outside {
-    color:  ${({ theme }) => theme.colors.gray500};
+    color: ${({ theme }) => theme.colors.gray500};
   }
 
   .rdp-day_selected {
@@ -162,26 +194,25 @@ export const DatePicker = styled(DayPicker)`
 `
 
 export const FilterButton = styled.button`
-    transition: background-color .5s;
-    color: white;
-    padding: 6px 16px;
-    border: none;
-    border-radius: 4px;
-    background: ${({ theme }) => theme.colors.blue400};
-    &:hover {
-      background: ${({ theme }) => theme.colors.blue300};
-      cursor: pointer;
-    }
-    &:disabled {
-      background: ${({ theme }) => theme.colors.gray300};
-      cursor: default;
-    }
+  border: none;
+  background: transparent;
+  display: flex;
+  fill: ${({ theme }) => theme.colors.black};
+  margin-right: -8px;
+  &:hover {
+    cursor: pointer;
+    fill: ${({ theme }) => theme.colors.blue400};
+  }
 `
 
 export const Toggle = styled.button<{ active: boolean }>`
-  transition: background-color .5s;
-  background: ${button => (button.active ? ({ theme }) => theme.colors.blue300 : ({ theme }) => theme.colors.gray100)};
-  color: ${button => (button.active ? 'white' : ({ theme }) => theme.colors.blue300)};
+  transition: background-color 0.5s;
+  background: ${(button) =>
+    button.active
+      ? ({ theme }) => theme.colors.blue300
+      : ({ theme }) => theme.colors.gray100};
+  color: ${(button) =>
+    button.active ? 'white' : ({ theme }) => theme.colors.blue300};
   border: 1px solid ${({ theme }) => theme.colors.blue300};
   border-radius: 4px;
   display: flex;
@@ -196,9 +227,8 @@ export const ChartContainer = styled.div`
   height: 650px;
   padding: 32px;
   box-sizing: border-box;
-  border: 1px solid ${({ theme }) => theme.colors.gray200};
+  border: 1px solid ${({ theme }) => theme.colors.gray300};
   border-radius: 8px;
-  background: ${({ theme }) => theme.colors.gray100};
 `
 
 export const ResponsiveContainer = styled(rechartsContainer)`
