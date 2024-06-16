@@ -54,17 +54,18 @@ function Dashboard() {
 
   const month = new Date()
 
-  const [forecastingOn, setForecastingOn] = useState<boolean>(false)
-  const [confidenceIntervalOn, setConfidenceIntervalOn] =
-    useState<boolean>(false)
   const [range, setRange] = useState<DateRange | undefined>(undefined)
 
   const { data: flowSeriesResult } = useQuery({
     queryKey: ['flow', range],
     queryFn: async () => {
+      const rangeFrom = range && range.from ? range.from.getTime() / 1000 : undefined
+      const rangeTo = range && range.to ? range.to.getTime() / 1000 : undefined
+      
       const response = await api.get('/flow', {
         params: {
-          range
+          rangeFrom,
+          rangeTo
         }
       })
 
