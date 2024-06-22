@@ -208,7 +208,7 @@ function Dashboard() {
                 {!range?.to || !range?.from ? (
                   <CalendarIcon />
                 ) : (
-                  <S.FilterButton onClick={() => setRange()}>
+                  <S.FilterButton onClick={() => setRange(range)}>
                     <CloseIcon />
                   </S.FilterButton>
                 )}
@@ -245,7 +245,7 @@ function Dashboard() {
         stroke="#29BF12"
         strokeDasharray="3 4 5 2"
       />
-       <Line
+    <Line
         dot={false}
         dataKey="real"
         name="vazão real"
