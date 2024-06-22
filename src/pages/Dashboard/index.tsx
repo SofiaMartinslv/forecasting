@@ -23,13 +23,10 @@ import { isAxiosError } from 'axios'
 import { useNavigate } from 'react-router-dom'
 import CloseIcon from '@/assets/CloseIcon'
 
-interface Flow {
-  value: number
-  date: Date
-  timestamp: number
-}
 
 function Dashboard() {
+
+
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -68,40 +65,92 @@ function Dashboard() {
         }
       })
 
+      const responseForecasting = await api.get('/forecasting', {
+        params: {
+          rangeFrom,
+          rangeTo
+        }
+      })
+
       const data = response.data
+      const dataForecasting = responseForecasting.data
 
-      const realFlow = data['flow'].filter(
-        (item: Flow) => item
-      )
-      const forecastData = data['flow'].filter(
-        (item: Flow) => item
-      )
+      const realFlow = data['flow'].sort((a: { timestamp: number }, b: { timestamp: number }) => a.timestamp - b.timestamp)
+      const forecastData = dataForecasting['forecasting'].sort((a: { timestamp: number }, b: { timestamp: number }) => a.timestamp - b.timestamp)
 
-      const series = [
-        {
-          name: 'vazão real',
-          data: realFlow
-        },
-        {
-          name: 'vazão prevista',
-          data: forecastData
+      const formattedSeries: any[] | PromiseLike<any[]> = [];
+
+      // Match by timestamp the two arrays and join the values by timestamp proximity, merge them with the closest timestamp
+      for (let i = 0; i < forecastData.length; i++) {
+        const forecastItem = forecastData[i];
+        const forecastTimestamp = forecastItem.timestamp;
+        const closestRealFlowItem = realFlow.find((item: { timestamp: number }) => {
+          const timeDiff = Math.abs(item.timestamp - forecastTimestamp);
+          const hoursDiff = timeDiff / (60 * 60);
+          return hoursDiff < 0.5; 
+        });
+
+        const forecastDate = new Date(forecastTimestamp * 1000);
+        const formattedForecastDate = format(forecastDate, 'yyyy-MM-dd');
+
+        const mergedItemIndex = formattedSeries.findIndex((item: { timestamp: string }) => {
+          const itemDate = new Date(item.timestamp);
+          const formattedItemDate = format(itemDate, 'yyyy-MM-dd');
+          return formattedItemDate === formattedForecastDate;
+        });
+
+        if (mergedItemIndex !== -1) {
+          formattedSeries[mergedItemIndex] = {
+            ...formattedSeries[mergedItemIndex],
+            real: closestRealFlowItem ? closestRealFlowItem.value : null,
+            forecasted: forecastItem.value
+          };
+        } else {
+          formattedSeries.push({
+            timestamp: formattedForecastDate,
+            real: closestRealFlowItem ? closestRealFlowItem.value : null,
+            forecasted: forecastItem.value
+          });
         }
-      ]
-      const leak =  [
-        {
-          name: 'vazão real',
-          data: realFlow
+      }
+
+      // Ensure all real flow values are included even if they don't have a close forecast value
+      for (let i = 0; i < realFlow.length; i++) {
+        const realItem = realFlow[i];
+        const realDate = new Date(realItem.timestamp * 1000);
+        const formattedRealDate = format(realDate, 'yyyy-MM-dd');
+
+        const existingItemIndex = formattedSeries.findIndex((item: { timestamp: string }) => {
+          const itemDate = new Date(item.timestamp);
+          const formattedItemDate = format(itemDate, 'yyyy-MM-dd');
+          return formattedItemDate === formattedRealDate;
+        });
+
+        if (existingItemIndex === -1) {
+          formattedSeries.push({
+            timestamp: formattedRealDate,
+            real: realItem.value,
+            forecasted: null
+          });
         }
-      ]
+      }
+
+            return formattedSeries;
+          }
+        })
+
+  
 
 
-      return leak
-    }
-  })
+
 
   useEffect(() => {
     console.log('selected', range)
   }, [range])
+
+  
+
+
 
   return (
     <>
@@ -179,30 +228,31 @@ function Dashboard() {
             </Popover.Root>
           </div>
         </S.Filters>
-          <S.ResponsiveContainer>
-          <LineChart width={500} height={300} data={flowSeriesResult}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="timestamp" type="category" tickFormatter={(timestamp) => format(new Date(timestamp * 1000), 'dd/MM/yyyy')} />
-          <YAxis dataKey="value" />
-          <Tooltip />
-          <Legend />
-          
-          {flowSeriesResult &&
-                flowSeriesResult.map((s) => (
-                  <Line
-                    dot={false}
-                    dataKey="value"
-                    data={s.data}
-                    name={s.name}
-                    key={s.name}
-                    stroke={s.name === 'vazão prevista' ? '#29BF12' : '#3E92CC'}
-                    strokeDasharray={
-                      s.name === 'vazão prevista' ? '3 4 5 2' : ''
-                    }
-                  />
-                ))}
-        </LineChart>
-          </S.ResponsiveContainer>
+        <S.ResponsiveContainer>
+  <LineChart width={500} height={300} data={flowSeriesResult}>
+    <CartesianGrid strokeDasharray="3 3" />
+    <XAxis 
+      dataKey="timestamp" 
+
+    />
+    <YAxis />
+    <Tooltip />
+    <Legend />
+    <Line
+        dot={false}
+        dataKey="forecasted"
+        name="previsão de vazão"
+        stroke="#29BF12"
+        strokeDasharray="3 4 5 2"
+      />
+       <Line
+        dot={false}
+        dataKey="real"
+        name="vazão real"
+        stroke="#3E92CC" 
+      />
+  </LineChart>
+</S.ResponsiveContainer>
 
 
           
