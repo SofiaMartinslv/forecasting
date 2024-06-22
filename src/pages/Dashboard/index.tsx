@@ -26,8 +26,7 @@ import CloseIcon from '@/assets/CloseIcon'
 interface Flow {
   value: number
   date: Date
-  confidenceInterval: number[]
-  isForecasting: boolean
+  timestamp: number
 }
 
 function Dashboard() {
@@ -72,10 +71,10 @@ function Dashboard() {
       const data = response.data
 
       const realFlow = data['flow'].filter(
-        (item: Flow) => item.isForecasting === false
+        (item: Flow) => item
       )
       const forecastData = data['flow'].filter(
-        (item: Flow) => item.isForecasting === true
+        (item: Flow) => item
       )
 
       const series = [
@@ -88,8 +87,15 @@ function Dashboard() {
           data: forecastData
         }
       ]
+      const leak =  [
+        {
+          name: 'vazão real',
+          data: realFlow
+        }
+      ]
 
-      return series
+
+      return leak
     }
   })
 
@@ -174,21 +180,14 @@ function Dashboard() {
           </div>
         </S.Filters>
           <S.ResponsiveContainer>
-            <LineChart width={500} height={300}>
-              <CartesianGrid strokeDasharray="3 3" />
-
-              <XAxis
-                dataKey="date"
-                type="category"
-                allowDuplicatedCategory={false}
-                tickFormatter={(value: string) => format(value, 'dd/MM hh:mm')}
-              />
-              <YAxis dataKey="value" />
-
-              <Tooltip />
-              <Legend />
-
-              {flowSeriesResult &&
+          <LineChart width={500} height={300} data={flowSeriesResult}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="timestamp" type="category" tickFormatter={(timestamp) => format(new Date(timestamp * 1000), 'dd/MM/yyyy')} />
+          <YAxis dataKey="value" />
+          <Tooltip />
+          <Legend />
+          
+          {flowSeriesResult &&
                 flowSeriesResult.map((s) => (
                   <Line
                     dot={false}
@@ -202,8 +201,11 @@ function Dashboard() {
                     }
                   />
                 ))}
-            </LineChart>
+        </LineChart>
           </S.ResponsiveContainer>
+
+
+          
         </S.ChartContainer>
       </S.Container>
     </>
