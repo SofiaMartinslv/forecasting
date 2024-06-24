@@ -115,6 +115,10 @@ function Dashboard() {
     }
   })
 
+  const hasLastFlowData = data && data.meta.lastFlowData && data.meta.lastFlowData.value && data.meta.lastFlowData.timestamp
+  const hasHighestFlowData = data && data.meta.highestFlowData && data.meta.lastFlowData && data.meta.lastFlowData.timestamp
+  const hasLowestFlowData = data && data.meta.lowestFlowData && data.meta.lastFlowData && data.meta.lastFlowData.timestamp
+
   return (
     <>
       <Header />
@@ -127,18 +131,18 @@ function Dashboard() {
         <S.Indicators>
           <div>
             <b>Última medição de vazão recebida (l/s)</b>
-            <S.CardContent>{data && data.meta.lastFlowData.value.toFixed(2)} l/s</S.CardContent>
-            <S.CardFooter>{data && formatDate(data.meta.lastFlowData.timestamp * 1000, 'dd/MM/yyyy')}</S.CardFooter>
+            <S.CardContent>{hasLastFlowData && data.meta.lastFlowData.value.toFixed(2)} l/s</S.CardContent>
+            <S.CardFooter>{hasLastFlowData && formatDate(data.meta.lastFlowData.timestamp * 1000, 'dd/MM/yyyy')}</S.CardFooter>
           </div>
           <div>
             <b>Maior valor de vazão medido (l/s)</b>
-            <S.CardContent>{data && data.meta.highestFlowData.toFixed(2)} l/s</S.CardContent>
-            <S.CardFooter>{data && formatDate(data.meta.lastFlowData.timestamp * 1000, 'dd/MM/yyyy')}</S.CardFooter>
+            <S.CardContent>{hasHighestFlowData && data.meta.highestFlowData.toFixed(2)} l/s</S.CardContent>
+            <S.CardFooter>{hasHighestFlowData && formatDate(data.meta.lastFlowData.timestamp * 1000, 'dd/MM/yyyy')}</S.CardFooter>
           </div>
           <div>
             <b>Menor valor de vazão medido  (l/s)</b>
-            <S.CardContent>{data && data.meta.lowestFlowData.toFixed(2)} l/s</S.CardContent>
-            <S.CardFooter>{data && formatDate(data.meta.lastFlowData.timestamp * 1000, 'dd/MM/yyyy')}</S.CardFooter>
+            <S.CardContent>{hasLowestFlowData && data.meta.lowestFlowData.toFixed(2)} l/s</S.CardContent>
+            <S.CardFooter>{hasLowestFlowData && formatDate(data.meta.lastFlowData.timestamp * 1000, 'dd/MM/yyyy')}</S.CardFooter>
           </div>
         </S.Indicators>
 
@@ -190,7 +194,7 @@ function Dashboard() {
               <XAxis 
                 dataKey="timestamp"
                 type='number'
-                domain={['dataMin', 'dataMax']}
+                domain={['datMin', 'dataMax']}
                 tickFormatter={(timestamp) => formatDate(new Date(timestamp * 1000), 'dd/MM HH:mm')}
                 tickCount={25}
               />
@@ -231,6 +235,17 @@ function Dashboard() {
                         }
                       }
 
+                      if (flow.name == 'previsão de vazão') {
+                        return (
+                          <div style={{ backgroundColor: 'white', padding: '24px', border: '1px solid grey', borderRadius: '4px'}}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', padding: '4px' }}>
+                              <p>{`data: ${formatDate(new Date(label * 1000), 'dd/MM HH:mm')}`}</p>
+                              <p style={{ color: '#29BF12' }}>{`previsão de vazão: ${Number(flow.value).toFixed(2)} l/s`}</p>
+                            </div>
+                          </div>
+                        )
+                      }
+
                       return (
                         <div style={{ backgroundColor: 'white', padding: '24px', border: '1px solid grey', borderRadius: '4px'}}>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', padding: '4px' }}>
@@ -240,40 +255,53 @@ function Dashboard() {
                         </div>
                       )
                     }
+
+                    if (forecasting && forecasting.value) {
+                      return (
+                        <div style={{ backgroundColor: 'white', padding: '24px', border: '1px solid grey', borderRadius: '4px'}}>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', padding: '4px' }}>
+                            <p>{`data: ${formatDate(new Date(label * 1000), 'dd/MM HH:mm')}`}</p>
+                            <p style={{ color: '#29BF12' }}>{`previsão de vazão: ${Number(forecasting.value).toFixed(2)} l/s`}</p>
+                          </div>
+                        </div>
+                      )
+                    }
+
+                    return null
                   }
                 }}
               />
 
               <Legend />
 
-              {data && (
-                <>
-                  <Line
-                    yAxisId='1'
-                    orientation='right'
-                    connectNulls={true}
-                    key={data.series[0].name}
-                    data={data.series[0].data}
-                    name={data.series[0].name}
-                    dataKey='flow'
-                    type='monotone'
-                    stroke={'#3E92CC'}
-                    dot={false}
-                  />
+              {data && data.series[1] && (
+                <Line
+                  yAxisId='1'
+                  orientation='right'
+                  connectNulls={true}
+                  key={data.series[0].name}
+                  data={data.series[0].data}
+                  name={data.series[0].name}
+                  dataKey='flow'
+                  type='monotone'
+                  stroke={'#3E92CC'}
+                  dot={false}
+                />
+              )}
 
+              {data && data.series[0] && (
                   <Line
-                    yAxisId='2'
-                    connectNulls={true}
-                    key={data.series[1].name}
-                    data={data.series[1].data}
-                    name={data.series[1].name}
-                    dataKey='forecasting'
-                    type='monotone'
-                    stroke='#29BF12'
-                    strokeDasharray='3 4 5 2'
-                    dot={false}
-                  />
-                </>
+                  yAxisId='2'
+                  connectNulls={true}
+                  key={data.series[1].name}
+                  data={data.series[1].data}
+                  name={data.series[1].name}
+                  dataKey='forecasting'
+                  type='monotone'
+                  stroke='#29BF12'
+                  strokeDasharray='3 4 5 2'
+                  dot={false}
+                />
               )}
             </LineChart>
           </S.ResponsiveContainer>
