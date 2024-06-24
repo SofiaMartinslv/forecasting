@@ -1,7 +1,5 @@
 import {
-  Brush,
   CartesianGrid,
-  ComposedChart,
   Legend,
   Line,
   LineChart,
@@ -50,7 +48,7 @@ function Dashboard() {
   const month = new Date()
   const [range, setRange] = useState<DateRange | undefined>(undefined)
 
-  const { data: series } = useQuery({
+  const { data } = useQuery({
     queryKey: ['flow-forecasting', range],
     queryFn: async () => {
       const rangeFrom = range && range.from ? range.from.getTime() / 1000 : (Date.now() - (24 * 60 * 60 * 1000)) / 1000
@@ -73,6 +71,12 @@ function Dashboard() {
       const { flow } = flowResponse.data
       const { forecasting } = forecastingResponse.data
 
+      const flowValues = flow.map((i: any) => i.value)
+
+      const lastFlowData = flow[0]
+      const highestFlowData = Math.max(...flowValues)
+      const lowestFlowData = Math.min(...flowValues)
+
       const series = [
         {
           name: 'vazão real',
@@ -84,7 +88,14 @@ function Dashboard() {
         }
       ]
 
-      return series
+      return {
+        meta: {
+          lastFlowData,
+          highestFlowData,
+          lowestFlowData
+        },
+        series
+      }
     }
   })
 
@@ -99,19 +110,19 @@ function Dashboard() {
 
         <S.Indicators>
           <div>
-            <b>Indicador 1</b>
-            <S.CardContent>2342</S.CardContent>
-            <S.CardFooter>abc</S.CardFooter>
+            <b>Última medição de vazão recebida (l/s)</b>
+            <S.CardContent>{data && data.meta.lastFlowData.value.toFixed(2)} l/s</S.CardContent>
+            <S.CardFooter>{data && formatDate(data.meta.lastFlowData.timestamp * 1000, 'dd/MM/yyyy')}</S.CardFooter>
           </div>
           <div>
-            <b>Indicador 2</b>
-            <S.CardContent>1243</S.CardContent>
-            <S.CardFooter>abc</S.CardFooter>
+            <b>Maior valor de vazão medido (l/s)</b>
+            <S.CardContent>{data && data.meta.highestFlowData.toFixed(2)} l/s</S.CardContent>
+            <S.CardFooter>{data && formatDate(data.meta.lastFlowData.timestamp * 1000, 'dd/MM/yyyy')}</S.CardFooter>
           </div>
           <div>
-            <b>Indicador 3</b>
-            <S.CardContent>423</S.CardContent>
-            <S.CardFooter>abc</S.CardFooter>
+            <b>Menor valor de vazão medido  (l/s)</b>
+            <S.CardContent>{data && data.meta.lowestFlowData.toFixed(2)} l/s</S.CardContent>
+            <S.CardFooter>{data && formatDate(data.meta.lastFlowData.timestamp * 1000, 'dd/MM/yyyy')}</S.CardFooter>
           </div>
         </S.Indicators>
 
@@ -157,7 +168,7 @@ function Dashboard() {
           </S.Filters>
 
           <S.ResponsiveContainer>
-            <ComposedChart width={500} height={300}>
+            <LineChart>
               <CartesianGrid strokeDasharray="3 3" />
 
               <XAxis 
@@ -208,31 +219,33 @@ function Dashboard() {
 
               <Legend />
 
-              {series && (
+              {data && (
                 <>
                   <Line
-                    key={series[0].name}
-                    data={series[0].data}
-                    name={series[0].name}
+                    connectNulls={true}
+                    key={data.series[0].name}
+                    data={data.series[0].data}
+                    name={data.series[0].name}
                     dataKey='value'
-                    type='linear'
+                    type='monotone'
                     stroke={'#3E92CC'}
                     dot={false}
                   />
 
                   <Line
-                    key={series[1].name}
-                    data={series[1].data}
-                    name={series[1].name}
+                    connectNulls={true}
+                    key={data.series[1].name}
+                    data={data.series[1].data}
+                    name={data.series[1].name}
                     dataKey='value'
-                    type='linear'
+                    type='monotone'
                     stroke='#29BF12'
                     strokeDasharray='3 4 5 2'
                     dot={false}
                   />
                 </>
               )}
-            </ComposedChart>
+            </LineChart>
           </S.ResponsiveContainer>
         </S.ChartContainer>
       </S.Container>
