@@ -4,13 +4,8 @@ import { DayPicker } from 'react-day-picker'
 import * as Popover from '@radix-ui/react-popover'
 
 export const Container = styled.div`
-  height: 100vh;
+  height: calc(100vh - 113.51px);
   padding: 2rem 4rem;
-
-  hr {
-    width: 100%;
-    margin-bottom: 32px;
-  }
 `
 
 export const Title = styled.h1`
@@ -24,6 +19,7 @@ export const Indicators = styled.div`
   justify-content: space-between;
   margin-bottom: 16px;
   gap: 16px;
+
   div {
     box-shadow: 0 0 2px rgb(0 0 0 / 16%);
     flex: 1;
@@ -54,12 +50,9 @@ export const Filters = styled.div`
   text-align: center;
   display: flex;
   justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 16px;
 
   div {
     display: flex;
-    gap: 16px;
   }
 `
 
@@ -223,9 +216,12 @@ export const Toggle = styled.button<{ active: boolean }>`
 
 export const ChartContainer = styled.div`
   box-shadow: 0 0 4px rgb(0 0 0 / 16%);
-  width: 100%;
-  height: 650px;
-  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  height: 69%;
+  padding: 24px 32px;
   box-sizing: border-box;
   border: 1px solid ${({ theme }) => theme.colors.gray300};
   border-radius: 8px;
@@ -234,6 +230,4 @@ export const ChartContainer = styled.div`
 export const ResponsiveContainer = styled(rechartsContainer)`
   padding: 32px 32px 32px 0;
   box-sizing: border-box;
-  border-radius: 8px;
-  background: ${({ theme }) => theme.colors.gray100};
 `
