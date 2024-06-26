@@ -39,9 +39,13 @@ export const Indicators = styled.div`
 
 export const CardContent = styled.p`
   text-align: center;
+  color:  ${({ theme }) => theme.colors.blue400};
+  font-size: 30px;
+  font-weight: bold;
 `
 
 export const CardFooter = styled.p`
+  font-size: 12px;
   text-align: right;
   color: ${({ theme }) => theme.colors.gray500};
 `
